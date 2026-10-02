@@ -1,0 +1,26 @@
+{
+  "name": "awardly",
+  "version": "1.0.0",
+  "private": true,
+  "description": "Reusable paid voting and awards management platform by Elite Developers",
+  "scripts": {
+    "dev:web": "pnpm --filter @awardly/web dev",
+    "dev:admin": "pnpm --filter @awardly/admin dev",
+    "dev:api": "pnpm --filter @awardly/api dev",
+    "build": "pnpm -r build",
+    "build:web": "pnpm --filter @awardly/web build",
+    "build:admin": "pnpm --filter @awardly/admin build",
+    "lint": "pnpm -r lint",
+    "test": "pnpm -r test",
+    "db:generate": "pnpm --filter @awardly/database db:generate",
+    "db:migrate": "pnpm --filter @awardly/database db:migrate",
+    "db:seed": "pnpm --filter @awardly/database db:seed",
+    "db:studio": "pnpm --filter @awardly/database db:studio",
+    "typecheck": "pnpm -r typecheck"
+  },
+  "engines": {
+    "node": ">=18.0.0",
+    "pnpm": ">=8.0.0"
+  },
+  "packageManager": "pnpm@11.9.0"
+}

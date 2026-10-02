@@ -1,0 +1,42 @@
+{
+  "name": "@awardly/web",
+  "version": "1.0.0",
+  "private": true,
+  "type": "module",
+  "scripts": {
+    "dev": "vite --port 5173",
+    "build": "tsc -b && vite build",
+    "preview": "vite preview",
+    "lint": "eslint . --ext ts,tsx --report-unused-disable-directives",
+    "typecheck": "tsc --noEmit",
+    "test": "vitest"
+  },
+  "dependencies": {
+    "@awardly/shared-types": "workspace:*",
+    "@tanstack/react-query": "^5.62.7",
+    "aos": "^2.3.4",
+    "axios": "^1.7.9",
+    "clsx": "^2.1.1",
+    "dayjs": "^1.11.13",
+    "gsap": "^3.12.5",
+    "lucide-react": "^1.49.0",
+    "react": "^18.3.1",
+    "react-dom": "^18.3.1",
+    "react-helmet-async": "^2.0.5",
+    "react-query": "^3.39.3",
+    "react-router-dom": "^6.28.0",
+    "sweetalert2": "^11.14.2"
+  },
+  "devDependencies": {
+    "@types/aos": "^3.0.7",
+    "@types/react": "^18.3.12",
+    "@types/react-dom": "^18.3.1",
+    "@vitejs/plugin-react": "^4.3.3",
+    "autoprefixer": "^10.4.20",
+    "postcss": "^8.4.49",
+    "tailwindcss": "^3.4.15",
+    "typescript": "^5.5.4",
+    "vite": "^6.0.3",
+    "vitest": "^2.1.6"
+  }
+}
