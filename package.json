@@ -27,5 +27,8 @@
     "onlyBuiltDependencies": [
       "esbuild"
     ]
+  },
+  "devDependencies": {
+    "vercel": "^62.1.0"
   }
 }
