@@ -24,7 +24,17 @@
     "pnpm": ">=8.0.0"
   },
   "packageManager": "pnpm@11.9.0",
+  "dependencies": {
+    "@neondatabase/serverless": "^0.10.4",
+    "@vercel/node": "^5.0.0",
+    "cors": "^2.8.5",
+    "drizzle-orm": "^0.38.4",
+    "express": "^4.19.2"
+  },
   "devDependencies": {
+    "@types/cors": "^2.8.17",
+    "@types/express": "^4.17.21",
+    "@types/node": "^20.12.7",
     "vercel": "^62.1.0"
   }
 }
