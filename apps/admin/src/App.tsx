@@ -1,6 +1,7 @@
 import React, { useState } from 'react';
 import LoginPage from './pages/LoginPage';
 import DashboardOverview from './pages/DashboardOverview';
+import CategoriesManager from './pages/CategoriesManager';
 import NomineesManager from './pages/NomineesManager';
 import TransactionsManager from './pages/TransactionsManager';
 import SettingsManager from './pages/SettingsManager';
@@ -8,7 +9,7 @@ import { getAuthToken, removeAuthToken } from './services/api';
 
 export default function App() {
   const [isAuthenticated, setIsAuthenticated] = useState<boolean>(Boolean(getAuthToken()));
-  const [activeTab, setActiveTab] = useState<'dashboard' | 'nominees' | 'transactions' | 'settings'>('dashboard');
+  const [activeTab, setActiveTab] = useState<'dashboard' | 'categories' | 'nominees' | 'transactions' | 'settings'>('dashboard');
 
   if (!isAuthenticated) {
     return <LoginPage onLoginSuccess={() => setIsAuthenticated(true)} />;
@@ -51,6 +52,17 @@ export default function App() {
             </button>
 
             <button
+              onClick={() => setActiveTab('categories')}
+              className={`w-full text-left px-4 py-3 rounded-xl font-bold text-sm transition-all flex items-center gap-3 cursor-pointer ${
+                activeTab === 'categories'
+                  ? 'bg-[#007A4D] text-white shadow-lg shadow-[#007A4D]/40 border border-[#EBF700]/40'
+                  : 'text-emerald-200/70 hover:text-white hover:bg-[#007A4D]/20 border border-transparent'
+              }`}
+            >
+              <span className="text-base">🏆</span> Award Categories
+            </button>
+
+            <button
               onClick={() => setActiveTab('nominees')}
               className={`w-full text-left px-4 py-3 rounded-xl font-bold text-sm transition-all flex items-center gap-3 cursor-pointer ${
                 activeTab === 'nominees'
@@ -58,7 +70,7 @@ export default function App() {
                   : 'text-emerald-200/70 hover:text-white hover:bg-[#007A4D]/20 border border-transparent'
               }`}
             >
-              <span className="text-base">🏆</span> Nominees
+              <span className="text-base">👤</span> Nominees
             </button>
 
             <button
@@ -130,6 +142,7 @@ export default function App() {
         {/* Scrollable Content View */}
         <main className="flex-1 p-8 overflow-y-auto">
           {activeTab === 'dashboard' && <DashboardOverview />}
+          {activeTab === 'categories' && <CategoriesManager />}
           {activeTab === 'nominees' && <NomineesManager />}
           {activeTab === 'transactions' && <TransactionsManager />}
           {activeTab === 'settings' && <SettingsManager />}

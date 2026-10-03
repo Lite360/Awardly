@@ -215,6 +215,59 @@ app.get('/api/admin/categories', adminAuth, async (_req, res) => {
   }
 });
 
+app.post('/api/admin/categories', adminAuth, async (req, res) => {
+  try {
+    const db = getDb();
+    const { name, description } = req.body;
+    const evts = await db.select().from(events).limit(1);
+    const eventId = evts[0]?.id;
+    const slug = `${(name || 'category').toLowerCase().replace(/[^a-z0-9]+/g, '-')}-${Date.now()}`;
+    if (!eventId) {
+      return res.status(400).json({ success: false, error: { code: 'NO_EVENT', message: 'No event found' } });
+    }
+    const ins = await db.insert(categories).values({
+      eventId,
+      name: name || 'New Category',
+      slug,
+      description: description || null,
+      isPublished: true,
+    }).returning();
+    res.json({ success: true, data: ins[0], requestId: `req_${Date.now()}` });
+  } catch (err) {
+    const message = err instanceof Error ? err.message : 'DB Error';
+    res.status(500).json({ success: false, error: { code: 'DB_ERROR', message }, requestId: `req_${Date.now()}` });
+  }
+});
+
+app.put('/api/admin/categories', adminAuth, async (req, res) => {
+  try {
+    const db = getDb();
+    const { id, name, description } = req.body;
+    if (!id) return res.status(400).json({ success: false, error: { code: 'MISSING_ID', message: 'Category ID required' } });
+    const updated = await db
+      .update(categories)
+      .set({ name, description, updatedAt: new Date() })
+      .where(eq(categories.id, id))
+      .returning();
+    res.json({ success: true, data: updated[0], requestId: `req_${Date.now()}` });
+  } catch (err) {
+    const message = err instanceof Error ? err.message : 'DB Error';
+    res.status(500).json({ success: false, error: { code: 'DB_ERROR', message }, requestId: `req_${Date.now()}` });
+  }
+});
+
+app.delete('/api/admin/categories/:id', adminAuth, async (req, res) => {
+  try {
+    const db = getDb();
+    const { id } = req.params;
+    await db.delete(categories).where(eq(categories.id, id!));
+    res.json({ success: true, data: { id }, requestId: `req_${Date.now()}` });
+  } catch (err) {
+    const message = err instanceof Error ? err.message : 'DB Error';
+    res.status(500).json({ success: false, error: { code: 'DB_ERROR', message }, requestId: `req_${Date.now()}` });
+  }
+});
+
 app.get('/api/admin/nominees', adminAuth, async (_req, res) => {
   try {
     const db = getDb();
