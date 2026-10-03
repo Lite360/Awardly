@@ -1,5 +1,8 @@
 {
+  "buildCommand": "pnpm run build:vercel",
   "outputDirectory": "apps/web/dist",
-  "buildCommand": "pnpm run build",
-  "ignoreCommand": "git diff --quiet HEAD^ HEAD ./"
+  "rewrites": [
+    { "source": "/admin/:path*", "destination": "/admin/index.html" },
+    { "source": "/((?!admin|api).*)", "destination": "/index.html" }
+  ]
 }
