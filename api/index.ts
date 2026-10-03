@@ -59,6 +59,18 @@ const adminAuth = (req: Request, res: Response, next: NextFunction) => {
   next();
 };
 
+// ── Auth Route ────────────────────────────────────────────────────────────────
+app.post('/api/admin/auth/login', (_req, res) => {
+  res.json({
+    success: true,
+    data: {
+      token: `ADMIN_TOKEN_${Date.now()}`,
+      user: { id: 'admin_1', email: 'admin@awardly.com', name: 'Super Admin' },
+    },
+    requestId: `req_${Date.now()}`,
+  });
+});
+
 // ══════════════════════════════════════════════════════════════════════════════
 // PUBLIC ROUTES
 // ══════════════════════════════════════════════════════════════════════════════

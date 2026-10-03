@@ -26,9 +26,16 @@ export async function adminApiRequest<T>(
     headers,
   });
 
-  const data = await response.json();
+  const text = await response.text();
+  let data: any;
+  try {
+    data = JSON.parse(text);
+  } catch (_e) {
+    throw new Error(`Server error (${response.status}): ${text.slice(0, 150)}`);
+  }
+
   if (!response.ok || !data.success) {
-    throw new Error(data.error?.message || data.message || 'API request failed');
+    throw new Error(data.error?.message || data.message || `API error (${response.status})`);
   }
 
   return data.data as T;
