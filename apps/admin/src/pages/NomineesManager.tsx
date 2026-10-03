@@ -28,14 +28,16 @@ export default function NomineesManager() {
     { id: '4', name: 'Kemi Johnson', category: 'Young Leader of the Year', code: 'NOM-004', votes: 2160, isPublished: true },
   ]);
 
+  type FormState = { name: string; category: string; code: string; isPublished: boolean };
+
   const [showModal, setShowModal] = useState(false);
   const [editTarget, setEditTarget] = useState<Nominee | null>(null);
-  const [form, setForm] = useState({ name: '', category: CATEGORIES[0] as string, code: '', isPublished: true });
+  const [form, setForm] = useState<FormState>({ name: '', category: CATEGORIES[0]!, code: '', isPublished: true });
   const [saving, setSaving] = useState(false);
 
   const openAdd = () => {
     setEditTarget(null);
-    setForm({ name: '', category: CATEGORIES[0], code: '', isPublished: true });
+    setForm({ name: '', category: CATEGORIES[0]!, code: '', isPublished: true });
     setShowModal(true);
   };
 
