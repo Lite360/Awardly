@@ -24,11 +24,7 @@ function getDb() {
     process.env['POSTGRES_PRISMA_URL'] ||
     process.env['DATABASE_URL_UNPOOLED'] ||
     process.env['POSTGRES_URL_NON_POOLING'] ||
-    '';
-
-  if (!connectionString) {
-    throw new Error('No PostgreSQL database connection string found in environment variables.');
-  }
+    'postgresql://neondb_owner:npg_5cyKPiG9vBHM@ep-cool-recipe-b8ndvgq6-pooler.c-14.us-east-1.aws.neon.tech/neondb?channel_binding=require&sslmode=require';
 
   const sql = neon(connectionString);
   return drizzle(sql, {});
