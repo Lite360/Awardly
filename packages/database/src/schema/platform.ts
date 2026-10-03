@@ -87,6 +87,9 @@ export const platformSettings = pgTable('platform_settings', {
     }),
   emailFromName: text('email_from_name').notNull().default('Awardly'),
   emailFromAddress: text('email_from_address').notNull().default('noreply@awardly.com'),
+  siteContent: jsonb('site_content')
+    .$type<Record<string, any>>()
+    .default({}),
   // Singleton row guard
   singletonKey: integer('singleton_key').notNull().unique().default(1),
   createdAt: timestamp('created_at', { withTimezone: true })

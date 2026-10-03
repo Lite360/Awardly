@@ -8,7 +8,7 @@
     "dev:admin": "pnpm --filter @awardly/admin dev",
     "dev:api": "pnpm --filter @awardly/api dev",
     "build": "pnpm -r build",
-    "build:vercel": "pnpm -r build && cp -r apps/admin/dist apps/web/dist/admin",
+    "build:vercel": "pnpm -r build && node -e \"require('fs').cpSync('apps/admin/dist', 'apps/web/dist/admin', {recursive: true})\"",
     "build:web": "pnpm --filter @awardly/web build",
     "build:admin": "pnpm --filter @awardly/admin build",
     "lint": "pnpm -r lint",

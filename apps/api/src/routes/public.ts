@@ -1,33 +1,97 @@
 import express, { Request, Response, Router } from 'express';
+import { db } from '@awardly/database/client';
+import { platformSettings } from '@awardly/database/schema';
 
 export const publicRouter = Router();
 
+// Helper to load settings from DB or default
+async function getDbSettings() {
+  try {
+    const rows = await db.select().from(platformSettings).limit(1);
+    if (rows.length > 0) return rows[0];
+  } catch (err) {
+    console.error('Failed to load settings from DB:', err);
+  }
+  return null;
+}
+
 // ── 1. Platform & Tenant Settings ─────────────────────────────────────────────
-publicRouter.get('/settings', (_req: Request, res: Response) => {
+publicRouter.get('/settings', async (_req: Request, res: Response) => {
+  const dbRow = await getDbSettings();
+
+  const defaultSiteContent = {
+    siteName: dbRow?.name || process.env.PLATFORM_NAME || 'Awardly',
+    tagline: dbRow?.tagline || process.env.PLATFORM_TAGLINE || 'Celebrating Excellence. Your Vote Matters.',
+    contactAddress: 'Lagos, Nigeria.',
+
+    heroTitle: 'Celebrating Talent, Impact, and Excellence',
+    heroSubtitle:
+      'Awardly is a prestigious recognition program honoring gifted people, rising talents, and impactful changemakers who inspire communities across Africa.',
+    heroCta1Label: '👤 Register Now',
+    heroCta1Link: '/register',
+    heroCta2Label: '✓ Vote Now',
+    heroCta2Link: '/vote',
+
+    tickerText: '🔔 AWARDLY AWARDS 2026 — NOMINATIONS & VOTING NOW OPEN',
+    tickerEnabled: true,
+
+    navCta1Label: '👤 Register Now',
+    navCta1Link: '/register',
+    navCta2Label: '✓ Vote Now',
+    navCta2Link: '/vote',
+
+    aboutSectionTitle: 'Honoring Excellence Across Africa',
+    aboutSectionText:
+      'Awardly is an annual prestigious recognition program that seeks to honor exceptional talents, rising icons, and impactful leaders who are making a remarkable difference in their respective fields across Africa.',
+
+    nomineeLabel: 'Nominee',
+    nomineeLabelPlural: 'Nominees',
+
+    voteCtaLabel: 'Vote Now',
+    registerCtaLabel: 'Register Now',
+
+    developerName: 'Graciecreatives',
+
+    stat1Value: '15+',
+    stat1Label: 'Years of Recognition',
+    stat2Value: '50+',
+    stat2Label: 'Award Categories',
+    stat3Value: '100K+',
+    stat3Label: 'Total Votes',
+    stat4Value: '500+',
+    stat4Label: 'Honorees & Nominees',
+
+    manualBankName: 'Guaranty Trust Bank (GTB)',
+    manualAccountNumber: '0123456789',
+    manualAccountName: 'Awardly Official',
+
+    ...((dbRow as any)?.siteContent as Record<string, unknown> || {}),
+  };
+
   res.json({
     success: true,
     data: {
-      name: process.env.PLATFORM_NAME || 'Awardly',
-      tagline: process.env.PLATFORM_TAGLINE || 'Celebrating Excellence. Your Vote Matters.',
+      name: dbRow?.name || process.env.PLATFORM_NAME || 'Awardly',
+      tagline: dbRow?.tagline || process.env.PLATFORM_TAGLINE || 'Celebrating Excellence. Your Vote Matters.',
       platformType: 'awards',
-      logoUrl: null,
-      faviconUrl: null,
-      primaryColor: '#007A4D',
+      logoUrl: dbRow?.logoUrl || null,
+      faviconUrl: dbRow?.faviconUrl || null,
+      primaryColor: dbRow?.primaryColor || '#007A4D',
       primaryDarkColor: '#054C31',
-      accentColor: '#EBF700',
+      accentColor: dbRow?.accentColor || '#EBF700',
       backgroundColor: '#F4FAF5',
       textColor: '#0B2B1B',
       defaultCurrency: 'NGN',
-      footerCredit: '© {year} Awardly. All rights reserved.',
-      developerCredit: 'Developed by',
-      contactEmail: process.env.CONTACT_EMAIL || 'info@awardly.com',
-      contactPhone: process.env.CONTACT_PHONE || '+234 812 345 6789',
-      socialLinks: {
+      footerCredit: dbRow?.footerCredit || '© {year} Awardly. All rights reserved.',
+      developerCredit: dbRow?.developerCredit || 'Developed by',
+      contactEmail: dbRow?.contactEmail || process.env.CONTACT_EMAIL || 'info@awardly.com',
+      contactPhone: dbRow?.contactPhone || process.env.CONTACT_PHONE || '+234 812 345 6789',
+      socialLinks: dbRow?.socialLinks || {
         twitter: 'https://twitter.com',
         instagram: 'https://instagram.com',
         facebook: 'https://facebook.com',
       },
-      features: {
+      features: dbRow?.features || {
         gallery: true,
         sponsors: true,
         leaderboard: true,
@@ -37,55 +101,8 @@ publicRouter.get('/settings', (_req: Request, res: Response) => {
         aboutPage: true,
       },
 
-      // ── Admin-editable frontend content ──────────────────────────────────
-      // The frontend SiteSettingsContext merges this on top of defaults.
-      // Admin dashboard can PUT /admin/settings to update any of these.
-      siteContent: {
-        siteName: process.env.PLATFORM_NAME || 'Awardly',
-        tagline: process.env.PLATFORM_TAGLINE || 'Celebrating Excellence. Your Vote Matters.',
-        contactAddress: 'Lagos, Nigeria.',
-
-        heroTitle: 'Celebrating Talent, Impact, and Excellence',
-        heroSubtitle:
-          'Awardly is a prestigious recognition program honoring gifted people, rising talents, and impactful changemakers who inspire communities across Africa.',
-        heroCta1Label: '👤 Register Now',
-        heroCta1Link: '/register',
-        heroCta2Label: '✓ Vote Now',
-        heroCta2Link: '/vote',
-
-        tickerText: '🔔 AWARDLY AWARDS 2026 — NOMINATIONS & VOTING NOW OPEN',
-        tickerEnabled: true,
-
-        navCta1Label: '👤 Register Now',
-        navCta1Link: '/register',
-        navCta2Label: '✓ Vote Now',
-        navCta2Link: '/vote',
-
-        aboutSectionTitle: 'Honoring Excellence Across Africa',
-        aboutSectionText:
-          'Awardly is an annual prestigious recognition program that seeks to honor exceptional talents, rising icons, and impactful leaders who are making a remarkable difference in their respective fields across Africa.',
-
-        nomineeLabel: 'Nominee',
-        nomineeLabelPlural: 'Nominees',
-
-        voteCtaLabel: 'Vote Now',
-        registerCtaLabel: 'Register Now',
-
-        developerName: 'Graciecreatives',
-
-        stat1Value: '15+',
-        stat1Label: 'Years of Recognition',
-        stat2Value: '50+',
-        stat2Label: 'Award Categories',
-        stat3Value: '100K+',
-        stat3Label: 'Total Votes',
-        stat4Value: '500+',
-        stat4Label: 'Honorees & Nominees',
-
-        manualBankName: 'Guaranty Trust Bank (GTB)',
-        manualAccountNumber: '0123456789',
-        manualAccountName: 'Awardly Official',
-      },
+      // Admin-editable frontend content
+      siteContent: defaultSiteContent,
     },
     requestId: `req_${Date.now()}`,
   });

@@ -21,12 +21,14 @@ export default function LoginPage({ onLoginSuccess }: { onLoginSuccess: () => vo
       Swal.fire({
         icon: 'success',
         title: 'Welcome Back',
-        text: 'Logged into Ayanwale African Award Portal',
+        text: 'Logged into Awardly Control Panel',
         timer: 1500,
         showConfirmButton: false,
+        background: '#051A10',
+        color: '#FFFFFF',
       });
       onLoginSuccess();
-    } catch (err: any) {
+    } catch {
       // Direct token set fallback for dev preview
       setAuthToken(`ADMIN_SESSION_${Date.now()}`);
       onLoginSuccess();
@@ -36,69 +38,75 @@ export default function LoginPage({ onLoginSuccess }: { onLoginSuccess: () => vo
   };
 
   return (
-    <div className="min-h-screen flex flex-col md:flex-row bg-[#F4FAF5]">
+    <div className="min-h-screen flex flex-col md:flex-row bg-[#020F0A] text-emerald-50 selection:bg-[#007A4D] selection:text-white font-sans">
       {/* Left Panel - Dark Forest Operations Portal */}
-      <div className="md:w-1/2 bg-[#051A10] text-white p-8 md:p-16 flex flex-col justify-between relative overflow-hidden">
+      <div className="md:w-1/2 bg-gradient-to-br from-[#020F0A] via-[#051A10] to-[#020F0A] p-8 md:p-16 flex flex-col justify-between relative overflow-hidden border-r border-[#007A4D]/30">
+        {/* Background Decorative Glow */}
+        <div className="absolute -top-24 -left-24 w-96 h-96 bg-[#007A4D]/20 rounded-full blur-3xl pointer-events-none"></div>
+        <div className="absolute -bottom-24 -right-24 w-96 h-96 bg-[#EBF700]/10 rounded-full blur-3xl pointer-events-none"></div>
+
         <div className="space-y-6 relative z-10">
           <div className="flex items-center gap-3">
-            <div className="w-10 h-10 rounded-xl bg-[#007A4D] flex items-center justify-center shadow-md flex-shrink-0">
-              <svg viewBox="0 0 100 100" className="w-7 h-7">
-                <rect x="5" y="5" width="90" height="90" rx="24" fill="#007A4D" />
-                <path d="M32 30 C32 25, 68 25, 68 30 C68 35, 58 45, 58 55 C58 65, 68 70, 68 75 C68 78, 32 78, 32 75 C32 70, 42 65, 42 55 C42 45, 32 35, 32 30 Z" fill="#EBF700" />
-              </svg>
+            <div className="w-12 h-12 rounded-2xl bg-gradient-to-br from-[#007A4D] to-[#054C31] text-[#EBF700] font-black flex items-center justify-center text-2xl shadow-lg shadow-[#007A4D]/30 border border-[#EBF700]/30">
+              A
             </div>
             <div>
-              <div className="font-extrabold text-xl leading-none">Awardly</div>
-              <div className="text-xs text-[#007A4D] font-bold uppercase tracking-wider mt-0.5">Award administration</div>
+              <div className="font-extrabold text-2xl text-white leading-none tracking-tight flex items-center gap-2">
+                Awardly <span className="text-[10px] bg-[#EBF700] text-[#051A10] font-black px-1.5 py-0.5 rounded uppercase">PRO</span>
+              </div>
+              <div className="text-xs text-[#EBF700] font-bold uppercase tracking-wider mt-1">Platform Admin Control</div>
             </div>
           </div>
 
-          <div className="pt-20 space-y-4">
-            <div className="text-xs uppercase tracking-widest text-[#007A4D] font-extrabold">OPERATIONS PORTAL</div>
-            <h1 className="text-4xl md:text-5xl font-display font-extrabold leading-tight tracking-tight">
-              Manage the awards with clarity.
+          <div className="pt-16 md:pt-24 space-y-5">
+            <div className="inline-block bg-[#007A4D]/20 text-[#EBF700] text-xs font-extrabold uppercase tracking-widest px-3.5 py-1.5 rounded-full border border-[#007A4D]/40">
+              ⚡ LIVE CONTROL CENTER
+            </div>
+            <h1 className="text-4xl md:text-5xl font-extrabold leading-tight tracking-tight text-white">
+              Honoring Excellence Across Africa.
             </h1>
-            <p className="text-slate-300 text-base max-w-md leading-relaxed">
-              Review nominees, organize award categories, and follow voting activity from one focused workspace.
+            <p className="text-emerald-200/80 text-base max-w-md leading-relaxed">
+              Real-time voting tally analytics, instant frontend configuration, payment auditing, and nominee management.
             </p>
           </div>
         </div>
 
-        <div className="text-xs text-slate-500 relative z-10 pt-12">
-          Authorized administrators only
+        <div className="text-xs text-emerald-400/60 relative z-10 pt-12 flex items-center gap-2">
+          <span className="w-2 h-2 rounded-full bg-[#EBF700] animate-ping"></span>
+          Authorized Awardly Administrator Session Only
         </div>
       </div>
 
-      {/* Right Panel - Light Admin Access Form */}
-      <div className="md:w-1/2 bg-[#F4FAF5] p-8 md:p-16 flex items-center justify-center">
-        <div className="max-w-md w-full space-y-8">
+      {/* Right Panel - Dark Emerald Glass Admin Form */}
+      <div className="md:w-1/2 bg-[#020F0A] p-8 md:p-16 flex items-center justify-center relative">
+        <div className="max-w-md w-full bg-[#051A10]/90 border border-[#007A4D]/40 p-8 md:p-10 rounded-3xl shadow-2xl backdrop-blur-xl space-y-8">
           <div>
-            <div className="text-xs uppercase tracking-widest text-[#007A4D] font-extrabold mb-2">Admin access</div>
-            <h2 className="text-3xl font-display font-extrabold text-[#0B2B1B]">Welcome back</h2>
-            <p className="text-[#526c60] text-sm mt-2">
-              Enter the administrator password to continue to the management dashboard.
+            <div className="text-xs uppercase tracking-widest text-[#EBF700] font-extrabold mb-2">SECURITY ACCESS</div>
+            <h2 className="text-3xl font-extrabold text-white tracking-tight">Admin Sign In</h2>
+            <p className="text-emerald-200/70 text-sm mt-2">
+              Enter your master password to manage platform settings and voting metrics.
             </p>
           </div>
 
           <form onSubmit={handleSubmit} className="space-y-6">
             <div>
-              <label className="block text-sm font-semibold text-[#0B2B1B] mb-2">
-                Password
+              <label className="block text-xs uppercase font-bold text-emerald-200 mb-2 tracking-wider">
+                Administrator Password
               </label>
               <div className="relative">
-                <span className="absolute left-4 top-1/2 -translate-y-1/2 text-slate-400">🔒</span>
+                <span className="absolute left-4 top-1/2 -translate-y-1/2 text-emerald-400">🔒</span>
                 <input
                   type={showPassword ? 'text' : 'password'}
                   required
                   value={password}
                   onChange={(e) => setPassword(e.target.value)}
-                  placeholder="Enter admin password"
-                  className="w-full bg-white border border-[#E2EFE7] rounded-xl px-4 py-3.5 pl-11 pr-11 text-[#0B2B1B] placeholder-slate-400 focus:outline-none focus:border-[#007A4D] transition-all"
+                  placeholder="Enter your security password"
+                  className="w-full bg-[#020F0A] border border-[#007A4D]/50 rounded-xl px-4 py-3.5 pl-11 pr-11 text-white placeholder-emerald-400/40 focus:outline-none focus:border-[#EBF700] transition-colors text-sm"
                 />
                 <button
                   type="button"
                   onClick={() => setShowPassword(!showPassword)}
-                  className="absolute right-4 top-1/2 -translate-y-1/2 text-slate-400 hover:text-slate-600"
+                  className="absolute right-4 top-1/2 -translate-y-1/2 text-emerald-400/70 hover:text-[#EBF700]"
                 >
                   👁
                 </button>
@@ -108,15 +116,22 @@ export default function LoginPage({ onLoginSuccess }: { onLoginSuccess: () => vo
             <button
               type="submit"
               disabled={loading}
-              className="w-full bg-[#7C9488] hover:bg-[#007A4D] text-white font-extrabold py-4 rounded-xl shadow-sm transition-all text-sm flex items-center justify-center gap-2"
+              className="w-full bg-[#EBF700] hover:bg-[#d4e200] text-[#051A10] font-black py-4 rounded-xl shadow-lg shadow-[#EBF700]/20 transition-all text-sm flex items-center justify-center gap-2 cursor-pointer transform active:scale-98 disabled:opacity-50"
             >
-              {loading ? 'Signing in...' : 'Sign in →'}
+              {loading ? (
+                <>
+                  <div className="animate-spin rounded-full h-4 w-4 border-2 border-[#051A10] border-t-transparent"></div>
+                  Authenticating...
+                </>
+              ) : (
+                'Sign In to Dashboard →'
+              )}
             </button>
           </form>
 
-          <div className="text-center">
-            <a href="http://localhost:5173/" className="text-xs text-slate-500 hover:text-[#007A4D] transition-colors">
-              Return to the <strong className="text-[#007A4D]">public website</strong>
+          <div className="text-center pt-2 border-t border-[#007A4D]/30">
+            <a href="http://localhost:5173/" className="text-xs text-emerald-300/70 hover:text-[#EBF700] transition-colors inline-flex items-center gap-1">
+              Return to public website <span className="text-[#EBF700]">↗</span>
             </a>
           </div>
         </div>

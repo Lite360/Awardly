@@ -14,14 +14,14 @@ type Transaction = {
 };
 
 const STATUS_STYLES: Record<string, string> = {
-  paid: 'bg-emerald-500/20 text-emerald-400 border-emerald-500/30',
-  pending: 'bg-amber-500/20 text-amber-400 border-amber-500/30',
-  failed: 'bg-red-500/20 text-red-400 border-red-500/30',
+  paid: 'bg-[#007A4D]/30 text-[#EBF700] border-[#007A4D]',
+  pending: 'bg-amber-500/20 text-amber-300 border-amber-500/30',
+  failed: 'bg-rose-500/20 text-rose-300 border-rose-500/30',
 };
 
 const METHOD_STYLES: Record<string, string> = {
-  paystack: 'bg-indigo-500/20 text-indigo-400',
-  manual: 'bg-purple-500/20 text-purple-400',
+  paystack: 'bg-[#007A4D]/20 text-emerald-300 border border-[#007A4D]/40',
+  manual: 'bg-[#EBF700]/10 text-[#EBF700] border border-[#EBF700]/30',
 };
 
 const SAMPLE_TRANSACTIONS: Transaction[] = [
@@ -56,14 +56,14 @@ export default function TransactionsManager() {
       </div>`,
       icon: 'question',
       showCancelButton: true,
-      confirmButtonColor: '#10b981',
+      confirmButtonColor: '#007A4D',
       confirmButtonText: 'Approve & Allocate Votes',
-      background: '#1e293b',
-      color: '#f1f5f9',
+      background: '#051A10',
+      color: '#FFFFFF',
     }).then(res => {
       if (res.isConfirmed) {
         setTransactions(transactions.map(x => x.id === t.id ? { ...x, status: 'paid' } : x));
-        Swal.fire({ icon: 'success', title: 'Approved!', text: `${t.votes} votes allocated to ${t.voter}.`, timer: 2000, showConfirmButton: false });
+        Swal.fire({ icon: 'success', title: 'Approved!', text: `${t.votes} votes allocated to ${t.voter}.`, timer: 2000, showConfirmButton: false, background: '#051A10', color: '#FFFFFF' });
       }
     });
   };
@@ -75,31 +75,31 @@ export default function TransactionsManager() {
       icon: 'info',
       timer: 2000,
       showConfirmButton: false,
-      background: '#1e293b',
-      color: '#f1f5f9',
+      background: '#051A10',
+      color: '#FFFFFF',
     });
   };
 
   return (
-    <div className="space-y-6">
-      <div>
-        <h1 className="text-3xl font-bold text-white">Payment Orders</h1>
-        <p className="text-slate-400 text-sm">Audit live transactions, approve manual bank transfers, and reconcile Paystack orders.</p>
+    <div className="space-y-6 max-w-5xl pb-16">
+      <div className="border-b border-[#007A4D]/30 pb-5">
+        <h1 className="text-3xl font-extrabold text-white tracking-tight">Payment Orders & Audit</h1>
+        <p className="text-emerald-200/70 text-sm mt-1">Audit live transactions, approve manual bank transfers, and reconcile Paystack orders.</p>
       </div>
 
       {/* Summary Cards */}
       <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
-        <div className="bg-slate-800 border border-slate-700/60 rounded-xl p-5">
-          <div className="text-xs font-semibold text-slate-400 uppercase tracking-wider mb-1">Total Revenue (Paid)</div>
-          <div className="text-2xl font-black text-amber-400">{formatNaira(totalRevenue)}</div>
+        <div className="bg-[#051A10]/90 border border-[#007A4D]/40 rounded-2xl p-5 shadow-xl backdrop-blur-md">
+          <div className="text-xs font-bold text-emerald-300/70 uppercase tracking-wider mb-1">Total Revenue (Paid)</div>
+          <div className="text-2xl font-black text-[#EBF700]">{formatNaira(totalRevenue)}</div>
         </div>
-        <div className="bg-slate-800 border border-slate-700/60 rounded-xl p-5">
-          <div className="text-xs font-semibold text-slate-400 uppercase tracking-wider mb-1">Total Votes Allocated</div>
+        <div className="bg-[#051A10]/90 border border-[#007A4D]/40 rounded-2xl p-5 shadow-xl backdrop-blur-md">
+          <div className="text-xs font-bold text-emerald-300/70 uppercase tracking-wider mb-1">Total Votes Allocated</div>
           <div className="text-2xl font-black text-white">{totalVotes.toLocaleString()}</div>
         </div>
-        <div className="bg-slate-800 border border-slate-700/60 rounded-xl p-5">
-          <div className="text-xs font-semibold text-slate-400 uppercase tracking-wider mb-1">Pending Approvals</div>
-          <div className={`text-2xl font-black ${pendingCount > 0 ? 'text-amber-400' : 'text-slate-400'}`}>{pendingCount}</div>
+        <div className="bg-[#051A10]/90 border border-[#007A4D]/40 rounded-2xl p-5 shadow-xl backdrop-blur-md">
+          <div className="text-xs font-bold text-emerald-300/70 uppercase tracking-wider mb-1">Pending Approvals</div>
+          <div className={`text-2xl font-black ${pendingCount > 0 ? 'text-[#EBF700]' : 'text-emerald-400/60'}`}>{pendingCount}</div>
         </div>
       </div>
 
@@ -109,8 +109,10 @@ export default function TransactionsManager() {
           <button
             key={f}
             onClick={() => setFilter(f)}
-            className={`px-4 py-1.5 rounded-lg text-xs font-semibold capitalize transition-colors ${
-              filter === f ? 'bg-indigo-600 text-white' : 'bg-slate-800 text-slate-400 hover:text-white border border-slate-700'
+            className={`px-4 py-2 rounded-xl text-xs font-bold capitalize transition-all cursor-pointer ${
+              filter === f
+                ? 'bg-[#007A4D] text-white shadow-lg shadow-[#007A4D]/40 border border-[#EBF700]/40'
+                : 'bg-[#051A10] text-emerald-300/70 hover:text-white border border-[#007A4D]/30'
             }`}
           >
             {f}
@@ -118,10 +120,10 @@ export default function TransactionsManager() {
         ))}
       </div>
 
-      <div className="bg-slate-800 border border-slate-700/60 rounded-xl overflow-x-auto">
+      <div className="bg-[#051A10]/90 border border-[#007A4D]/40 rounded-2xl overflow-x-auto shadow-2xl backdrop-blur-md">
         <table className="w-full text-left border-collapse">
           <thead>
-            <tr className="bg-slate-900/60 text-slate-400 text-xs uppercase tracking-wider border-b border-slate-700">
+            <tr className="bg-[#020F0A] text-emerald-300/80 text-xs uppercase tracking-wider border-b border-[#007A4D]/40">
               <th className="py-4 px-6">Reference</th>
               <th className="py-4 px-6">Voter</th>
               <th className="py-4 px-6">Method</th>
@@ -132,34 +134,34 @@ export default function TransactionsManager() {
               <th className="py-4 px-6 text-right">Actions</th>
             </tr>
           </thead>
-          <tbody className="divide-y divide-slate-700/60 text-sm text-slate-200">
+          <tbody className="divide-y divide-[#007A4D]/20 text-sm text-emerald-100">
             {filtered.map((t) => (
-              <tr key={t.id} className="hover:bg-slate-700/30 transition-colors">
-                <td className="py-4 px-6 font-mono text-indigo-400 text-xs">{t.ref}</td>
+              <tr key={t.id} className="hover:bg-[#007A4D]/10 transition-colors">
+                <td className="py-4 px-6 font-mono text-[#EBF700] text-xs font-bold">{t.ref}</td>
                 <td className="py-4 px-6">
                   <div className="font-semibold text-white">{t.voter}</div>
-                  <div className="text-slate-400 text-xs">{t.email}</div>
+                  <div className="text-emerald-300/60 text-xs">{t.email}</div>
                 </td>
                 <td className="py-4 px-6">
-                  <span className={`text-xs px-2 py-1 rounded font-semibold ${METHOD_STYLES[t.method]}`}>
+                  <span className={`text-xs px-2.5 py-1 rounded-full font-bold ${METHOD_STYLES[t.method]}`}>
                     {t.method === 'paystack' ? 'Paystack' : 'Bank Transfer'}
                   </span>
                 </td>
                 <td className="py-4 px-6 text-right font-mono font-bold">{t.votes}</td>
-                <td className="py-4 px-6 text-right font-mono font-bold text-amber-400">{formatNaira(t.amountKobo)}</td>
+                <td className="py-4 px-6 text-right font-mono font-black text-[#EBF700]">{formatNaira(t.amountKobo)}</td>
                 <td className="py-4 px-6">
                   <span className={`border text-xs px-2.5 py-1 rounded-full font-bold uppercase ${STATUS_STYLES[t.status]}`}>
                     {t.status}
                   </span>
                 </td>
-                <td className="py-4 px-6 text-slate-400 text-xs">{t.date}</td>
+                <td className="py-4 px-6 text-emerald-300/60 text-xs">{t.date}</td>
                 <td className="py-4 px-6 text-right space-x-3">
                   {t.method === 'manual' && t.status === 'pending' ? (
-                    <button onClick={() => handleApproveManual(t)} className="text-emerald-400 hover:underline text-xs font-semibold">
+                    <button onClick={() => handleApproveManual(t)} className="text-[#EBF700] hover:underline text-xs font-extrabold cursor-pointer">
                       Approve
                     </button>
                   ) : (
-                    <button onClick={() => handleReconcile(t.ref)} className="text-indigo-400 hover:underline text-xs font-semibold">
+                    <button onClick={() => handleReconcile(t.ref)} className="text-emerald-300 hover:underline text-xs font-bold cursor-pointer">
                       Reconcile
                     </button>
                   )}
@@ -168,7 +170,7 @@ export default function TransactionsManager() {
             ))}
             {filtered.length === 0 && (
               <tr>
-                <td colSpan={8} className="text-center py-12 text-slate-500">No transactions found.</td>
+                <td colSpan={8} className="text-center py-12 text-emerald-400/50">No transactions found.</td>
               </tr>
             )}
           </tbody>
