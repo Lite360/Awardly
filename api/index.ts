@@ -16,17 +16,23 @@ import {
   voteOrders,
 } from '../packages/database/src/schema/index';
 
-// ── DB Connection ─────────────────────────────────────────────────────────────
-const connectionString =
-  process.env['DATABASE_URL'] ||
-  process.env['POSTGRES_URL'] ||
-  process.env['POSTGRES_PRISMA_URL'] ||
-  process.env['DATABASE_URL_UNPOOLED'] ||
-  process.env['POSTGRES_URL_NON_POOLING'] ||
-  '';
+// ── DB Connection Helper ──────────────────────────────────────────────────────
+function getDb() {
+  const connectionString =
+    process.env['DATABASE_URL'] ||
+    process.env['POSTGRES_URL'] ||
+    process.env['POSTGRES_PRISMA_URL'] ||
+    process.env['DATABASE_URL_UNPOOLED'] ||
+    process.env['POSTGRES_URL_NON_POOLING'] ||
+    '';
 
-const sql = neon(connectionString);
-const db = drizzle(sql, {});
+  if (!connectionString) {
+    throw new Error('No PostgreSQL database connection string found in environment variables.');
+  }
+
+  const sql = neon(connectionString);
+  return drizzle(sql, {});
+}
 
 // ── Express App ───────────────────────────────────────────────────────────────
 const app = express();
@@ -36,6 +42,7 @@ app.use(express.urlencoded({ extended: true }));
 
 // ── Helpers ───────────────────────────────────────────────────────────────────
 async function getOrCreateSettings() {
+  const db = getDb();
   const rows = await db.select().from(platformSettings).limit(1);
   if (rows.length > 0) return rows[0]!;
   const inserted = await db
@@ -81,6 +88,7 @@ app.get('/api/health', (_req, res) => {
 
 app.get('/api/public/settings', async (_req, res) => {
   try {
+    const db = getDb();
     const dbRow = await db.select().from(platformSettings).limit(1).then(r => r[0] ?? null);
 
     const defaultSiteContent = {
@@ -162,6 +170,7 @@ app.get('/api/admin/settings', adminAuth, async (_req, res) => {
 
 app.put('/api/admin/settings', adminAuth, async (req, res) => {
   try {
+    const db = getDb();
     const allowed = ['name', 'tagline', 'contactEmail', 'contactPhone', 'primaryColor', 'accentColor', 'footerCredit', 'developerCredit', 'socialLinks', 'features', 'siteContent'];
     const patch: Record<string, unknown> = {};
     for (const key of allowed) {
@@ -183,6 +192,7 @@ app.put('/api/admin/settings', adminAuth, async (req, res) => {
 
 app.get('/api/admin/events', adminAuth, async (_req, res) => {
   try {
+    const db = getDb();
     let rows = await db.select().from(events);
     if (rows.length === 0) {
       const ins = await db.insert(events).values({
@@ -200,6 +210,7 @@ app.get('/api/admin/events', adminAuth, async (_req, res) => {
 
 app.get('/api/admin/categories', adminAuth, async (_req, res) => {
   try {
+    const db = getDb();
     const rows = await db.select().from(categories);
     res.json({ success: true, data: rows, requestId: `req_${Date.now()}` });
   } catch (err) {
@@ -210,6 +221,7 @@ app.get('/api/admin/categories', adminAuth, async (_req, res) => {
 
 app.get('/api/admin/nominees', adminAuth, async (_req, res) => {
   try {
+    const db = getDb();
     const rows = await db.select().from(nominees);
     res.json({ success: true, data: rows, requestId: `req_${Date.now()}` });
   } catch (err) {
@@ -220,6 +232,7 @@ app.get('/api/admin/nominees', adminAuth, async (_req, res) => {
 
 app.post('/api/admin/nominees', adminAuth, async (req, res) => {
   try {
+    const db = getDb();
     const { name, code, categoryId, isPublished } = req.body;
     const slug = `${(name || 'nominee').toLowerCase().replace(/[^a-z0-9]+/g, '-')}-${Date.now()}`;
     const evts = await db.select().from(events).limit(1);
@@ -244,6 +257,7 @@ app.post('/api/admin/nominees', adminAuth, async (req, res) => {
 
 app.get('/api/admin/financials/summary', adminAuth, async (_req, res) => {
   try {
+    const db = getDb();
     const paidOrders = await db.select().from(voteOrders).where(eq(voteOrders.status, 'paid'));
     res.json({
       success: true,
