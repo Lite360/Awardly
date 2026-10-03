@@ -14,7 +14,7 @@ import {
     uniqueIndex
 } from 'drizzle-orm/pg-core';
 import {sql, relations} from 'drizzle-orm';
-import {currencyEnum} from './platform';
+import {currencyEnum} from './platform.js';
 
 export const eventStatusEnum = pgEnum('event_status', [
     'draft',

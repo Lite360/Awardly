@@ -12,7 +12,7 @@ import {
   index,
 } from 'drizzle-orm/pg-core';
 import { sql, relations } from 'drizzle-orm';
-import { events } from './events';
+import { events } from './events.js';
 
 export const mediaPurposeEnum = pgEnum('media_purpose', [
   'platform_logo',

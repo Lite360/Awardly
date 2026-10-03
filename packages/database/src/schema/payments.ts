@@ -15,8 +15,8 @@ import {
   uniqueIndex,
 } from 'drizzle-orm/pg-core';
 import { sql, relations } from 'drizzle-orm';
-import { currencyEnum } from './platform';
-import { events, nominees, categories } from './events';
+import { currencyEnum } from './platform.js';
+import { events, nominees, categories } from './events.js';
 
 export const orderStatusEnum = pgEnum('order_status', [
   'pending',
