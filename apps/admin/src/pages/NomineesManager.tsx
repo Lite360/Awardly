@@ -30,7 +30,7 @@ export default function NomineesManager() {
 
   const [showModal, setShowModal] = useState(false);
   const [editTarget, setEditTarget] = useState<Nominee | null>(null);
-  const [form, setForm] = useState({ name: '', category: CATEGORIES[0], code: '', isPublished: true });
+  const [form, setForm] = useState({ name: '', category: CATEGORIES[0] as string, code: '', isPublished: true });
   const [saving, setSaving] = useState(false);
 
   const openAdd = () => {
