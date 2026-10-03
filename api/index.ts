@@ -17,7 +17,15 @@ import {
 } from '../packages/database/src/schema/index';
 
 // ── DB Connection ─────────────────────────────────────────────────────────────
-const sql = neon(process.env['DATABASE_URL'] as string);
+const connectionString =
+  process.env['DATABASE_URL'] ||
+  process.env['POSTGRES_URL'] ||
+  process.env['POSTGRES_PRISMA_URL'] ||
+  process.env['DATABASE_URL_UNPOOLED'] ||
+  process.env['POSTGRES_URL_NON_POOLING'] ||
+  '';
+
+const sql = neon(connectionString);
 const db = drizzle(sql, {});
 
 // ── Express App ───────────────────────────────────────────────────────────────
