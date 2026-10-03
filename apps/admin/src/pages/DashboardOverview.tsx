@@ -24,17 +24,33 @@ export default function DashboardOverview() {
   const [loading, setLoading] = useState(true);
 
   useEffect(() => {
-    adminApiRequest('/financials/summary')
-      .then((res: any) => {
-        if (res?.data) {
+    adminApiRequest<{ totalRevenueKobo: number; totalVotesAllocated: number }>('/api/admin/financials/summary')
+      .then((data) => {
+        if (data) {
           setStats(prev => ({
             ...prev,
-            totalRevenueKobo: res.data.totalRevenueKobo ?? prev.totalRevenueKobo,
-            totalVotes: res.data.totalVotesAllocated ?? prev.totalVotes,
+            totalRevenueKobo: data.totalRevenueKobo ?? 0,
+            totalVotes: data.totalVotesAllocated ?? 0,
           }));
         }
       })
-      .catch(() => {/* use defaults */})
+      .catch(() => {});
+
+    adminApiRequest<any[]>('/api/admin/nominees')
+      .then((data) => {
+        if (Array.isArray(data)) {
+          setStats(prev => ({ ...prev, publishedNominees: data.length }));
+        }
+      })
+      .catch(() => {});
+
+    adminApiRequest<any[]>('/api/admin/events')
+      .then((data) => {
+        if (Array.isArray(data)) {
+          setStats(prev => ({ ...prev, activeEvents: data.length }));
+        }
+      })
+      .catch(() => {})
       .finally(() => setLoading(false));
   }, []);
 

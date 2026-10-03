@@ -21,12 +21,28 @@ const CATEGORIES = [
 ];
 
 export default function NomineesManager() {
-  const [nominees, setNominees] = useState<Nominee[]>([
-    { id: '1', name: 'Sarah Okonkwo', category: 'Artist of the Year', code: 'NOM-001', votes: 4280, isPublished: true },
-    { id: '2', name: 'James Adewale', category: 'Entrepreneur of the Year', code: 'NOM-002', votes: 3120, isPublished: true },
-    { id: '3', name: 'Amara Osei', category: 'Innovator of the Year', code: 'NOM-003', votes: 2890, isPublished: true },
-    { id: '4', name: 'Kemi Johnson', category: 'Young Leader of the Year', code: 'NOM-004', votes: 2160, isPublished: true },
-  ]);
+  const [nominees, setNominees] = useState<Nominee[]>([]);
+  const [loading, setLoading] = useState(true);
+
+  useEffect(() => {
+    adminApiRequest<any[]>('/api/admin/nominees')
+      .then((data) => {
+        if (Array.isArray(data)) {
+          setNominees(
+            data.map((n: any) => ({
+              id: n.id,
+              name: n.name,
+              category: n.categoryName || 'General',
+              code: n.code || 'NOM-001',
+              votes: n.voteCount || 0,
+              isPublished: n.isPublished ?? true,
+            }))
+          );
+        }
+      })
+      .catch(() => {})
+      .finally(() => setLoading(false));
+  }, []);
 
   type FormState = { name: string; category: string; code: string; isPublished: boolean };
 
@@ -51,11 +67,21 @@ export default function NomineesManager() {
     e.preventDefault();
     setSaving(true);
     try {
-      await adminApiRequest('/nominees', { method: editTarget ? 'PUT' : 'POST', body: JSON.stringify({ ...form, id: editTarget?.id }) });
+      const saved = await adminApiRequest<any>('/api/admin/nominees', {
+        method: editTarget ? 'PUT' : 'POST',
+        body: JSON.stringify({ ...form, id: editTarget?.id }),
+      });
       if (editTarget) {
         setNominees(nominees.map(n => n.id === editTarget.id ? { ...n, ...form } : n));
       } else {
-        const newNominee: Nominee = { id: String(Date.now()), votes: 0, ...form };
+        const newNominee: Nominee = {
+          id: saved?.id || String(Date.now()),
+          votes: 0,
+          name: form.name,
+          category: form.category,
+          code: form.code || saved?.code || `NOM-${Math.floor(100 + Math.random() * 900)}`,
+          isPublished: form.isPublished,
+        };
         setNominees([...nominees, newNominee]);
       }
       setShowModal(false);
